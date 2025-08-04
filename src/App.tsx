@@ -79,22 +79,11 @@ function App() {
     setShowRealEstateAgentVoice(false);
   };
 
-  // Component to render AgentDetail with route parameter
-  const AgentDetailWrapper = () => {
-    const { route } = useParams<{ route: string }>();
-    const navigate = useNavigate();
+  const { route } = useParams<{ route: string }>();
     
     // Find the agent in mockCards based on the route parameter
     const agent = mockCards.find((card) => card.route === route);
 
-    // Handle case where no agent is found
-    if (!agent) {
-      return <div>Agent not found</div>;
-    }
-
-    const handleBack = () => {
-      navigate("/");
-    };
 
     const handleAgentName = (agentName: string) => {
       // Assuming setAgentName is passed as getAgentName from InfiniteCardScroll
@@ -102,39 +91,17 @@ function App() {
       console.log("Agent Name:", agentName);
     };
 
-    return (
-      <AgentDetail
-        agent={agent}
-        onBack={handleBack}
-        handleStart={handleStart}
-        handleEnd={handleEnd}
-        getAgentName={handleAgentName}
-      />
-    );
-  };
+
 
   return (
-    <Router>
-      <div className="max-w-6xl mx-auto">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <InfiniteCardScroll
-                cards={mockCards}
-                handleStart={handleStart}
-                handleEnd={handleEnd}
-                stopScrolls={stopScrolls}
-                resumeScrolls={resumeScrolls}
-                showRealEstateAgentVoice={showRealEstateAgentVoice}
-                sessionStatus={sessionStatus}
-              />
-            }
-          />
-          <Route path="/:route" element={<AgentDetailWrapper />} />
-        </Routes>
-      </div>
-    </Router>
+   <div>
+    <AgentDetail
+    agent={agent}
+    handleStart={handleStart}
+    handleEnd={handleEnd}
+    getAgentName={handleAgentName}
+    />
+   </div>
   );
 }
 

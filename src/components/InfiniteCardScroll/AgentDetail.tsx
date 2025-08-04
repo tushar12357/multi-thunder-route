@@ -5,7 +5,6 @@ import "./AgentDetail.css";
 
 interface AgentDetailProps {
   agent: CardInterface;
-  onBack: () => void;
   handleStart: (agent_code: string) => void;
   handleEnd: () => void;
   getAgentName: (agentName: string) => void;
@@ -131,17 +130,6 @@ export const AgentDetail: React.FC<AgentDetailProps> = ({
 
   return (
     <div className="agent-detail-container">
-      {/* <div className="agent-detail-header">
-        <button 
-          className="back-button"
-          onClick={onBack}
-          aria-label="Back to agents"
-        >
-          <ArrowLeft size={20} />
-          <span>Back to Agents</span>
-        </button>
-      </div> */}
-
       <div className="agent-detail-content">
         <div className="agent-hero">
           <div
