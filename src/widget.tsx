@@ -43,4 +43,4 @@ class ReactWidget extends HTMLElement {
   }
 }
 
-customElements.define("react-widget-maic", ReactWidget);
+customElements.define("react-widget-raic", ReactWidget);
