@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import { InfiniteCardScroll } from "./components/InfiniteCardScroll/InfiniteCardScroll";
 import { mockCards } from "./data/mockCards";
 import { UltravoxSession } from "ultravox-client";
 import axios from "axios";
+import { AgentDetail } from "./components/InfiniteCardScroll/AgentDetail";
+
 function App() {
   const [isListening, setIsListening] = useState(false);
   const [callId, setCallId] = useState<string | null>(null);
   const [sessionStatus, setSessionStatus] = useState<string | null>(null);
-  console.log("sessionStatus", sessionStatus);
   const [callSessionId, setCallSessionId] = useState<string | null>(null);
   const [stopScrolls, setStopScrolls] = useState(false);
   const [resumeScrolls, setResumeScrolls] = useState(false);
-  const [showRealEstateAgentVoice, setShowRealEstateAgentVoice] =
-    useState(false);
+  const [showRealEstateAgentVoice, setShowRealEstateAgentVoice] = useState(false);
   const sessionref = useRef<UltravoxSession | null>(null);
 
   if (!sessionref.current) {
@@ -43,15 +44,11 @@ function App() {
         const wssUrl = response.data.joinUrl;
         setCallId(response.data.callId);
         setCallSessionId(response.data.call_session_id);
-        // console.log("Mic button clicked!", wssUrl);
 
         if (wssUrl) {
           console.log("wssUrl", wssUrl);
           sessionref.current?.joinCall(`${wssUrl}`);
-        } else {
-          // console.error("WebSocket URL is not set");
         }
-        // toggleVoice(true);
       } else {
         await sessionref.current?.leaveCall();
         setShowRealEstateAgentVoice(false);
@@ -65,7 +62,7 @@ function App() {
         );
       }
     } catch (error) {
-      // console.error("Error in handleMicClick:", error);
+      console.error("Error in handleStart:", error);
     }
   };
 
@@ -80,21 +77,64 @@ function App() {
     await sessionref.current?.leaveCall();
     setStopScrolls(false);
     setShowRealEstateAgentVoice(false);
-    // resumeScroll();
+  };
+
+  // Component to render AgentDetail with route parameter
+  const AgentDetailWrapper = () => {
+    const { route } = useParams<{ route: string }>();
+    const navigate = useNavigate();
+    
+    // Find the agent in mockCards based on the route parameter
+    const agent = mockCards.find((card) => card.route === route);
+
+    // Handle case where no agent is found
+    if (!agent) {
+      return <div>Agent not found</div>;
+    }
+
+    const handleBack = () => {
+      navigate("/");
+    };
+
+    const handleAgentName = (agentName: string) => {
+      // Assuming setAgentName is passed as getAgentName from InfiniteCardScroll
+      // You might need to manage this state differently if it's required here
+      console.log("Agent Name:", agentName);
+    };
+
+    return (
+      <AgentDetail
+        agent={agent}
+        onBack={handleBack}
+        handleStart={handleStart}
+        handleEnd={handleEnd}
+        getAgentName={handleAgentName}
+      />
+    );
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <InfiniteCardScroll
-        cards={mockCards}
-        handleStart={handleStart}
-        handleEnd={handleEnd}
-        stopScrolls={stopScrolls}
-        resumeScrolls={resumeScrolls}
-        showRealEstateAgentVoice={showRealEstateAgentVoice}
-        sessionStatus={sessionStatus}
-      />
-    </div>
+    <Router>
+      <div className="max-w-6xl mx-auto">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <InfiniteCardScroll
+                cards={mockCards}
+                handleStart={handleStart}
+                handleEnd={handleEnd}
+                stopScrolls={stopScrolls}
+                resumeScrolls={resumeScrolls}
+                showRealEstateAgentVoice={showRealEstateAgentVoice}
+                sessionStatus={sessionStatus}
+              />
+            }
+          />
+          <Route path="/:route" element={<AgentDetailWrapper />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

@@ -275,7 +275,7 @@ export const AgentDetail: React.FC<AgentDetailProps> = ({
 
   return (
     <div className="agent-detail-container">
-      <div className="agent-detail-header">
+      {/* <div className="agent-detail-header">
         <button 
           className="back-button"
           onClick={onBack}
@@ -284,7 +284,7 @@ export const AgentDetail: React.FC<AgentDetailProps> = ({
           <ArrowLeft size={20} />
           <span>Back to Agents</span>
         </button>
-      </div>
+      </div> */}
 
       <div className="agent-detail-content">
         <div className="agent-hero">
