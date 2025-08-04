@@ -104,7 +104,7 @@ const App: React.FC = () => {
           <h2 className="text-2xl font-semibold">Agent Not Found</h2>
           <p className="mt-2">The requested agent does not exist.</p>
           <button
-            className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700"
+            className="mt-4 bg-orange-600 text-white px-6 py-2 rounded-full hover:bg-orange-700"
             onClick={() => (window.location.href = "https://ravan.ai/use-case")}
           >
             Go Back
